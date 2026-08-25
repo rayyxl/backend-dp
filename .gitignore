@@ -1,0 +1,36 @@
+# Ambiente e segredos
+.env
+*.env.local
+
+# Banco de dados
+db.sqlite3
+db.sqlite3-journal
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+
+# Django
+staticfiles/
+media/
+
+# Editores / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

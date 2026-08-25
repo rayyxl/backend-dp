@@ -1,0 +1,75 @@
+{% extends "presentation/_section_base.html" %}
+
+{% block title %}A área no Brasil — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Panorama do mercado back-end no Brasil: análise de vagas no Linkedin e dados de empregos CLT de TIC da Brasscom.{% endblock %}
+
+{% block section_body %}
+<section class="space-y-5">
+  <h2 class="text-xl font-semibold text-foreground">{{ brasil.linkedin.titulo }}</h2>
+  <p class="leading-relaxed text-muted-foreground">{{ brasil.linkedin.intro }}</p>
+  {% include "partials/_doc_image.html" with src="img/linkedin-brasil.png" alt="Resultado da busca por vagas de back-end no Brasil no Linkedin" caption=brasil.linkedin.legenda_brasil %}
+  <p class="leading-relaxed text-muted-foreground">{{ brasil.linkedin.meio }}</p>
+  {% include "partials/_doc_image.html" with src="img/linkedin-paraiba.png" alt="Resultado da busca por vagas de back-end na Paraíba no Linkedin" caption=brasil.linkedin.legenda_paraiba %}
+  {% include "partials/_callout.html" with body=brasil.linkedin.fim %}
+</section>
+
+<section class="space-y-5">
+  <h2 class="text-xl font-semibold text-foreground">{{ brasil.brasscom.titulo }}</h2>
+  {% for paragrafo in brasil.brasscom.paragrafos %}
+  <p class="leading-relaxed text-muted-foreground">{{ paragrafo }}</p>
+  {% endfor %}
+  {% include "partials/_doc_image.html" with src="img/brasscom-mapa.png" alt="Mapa geral nacional da participação dos empregos CLT de TIC e Top 5 ocupações" caption=brasil.brasscom.legenda_mapa %}
+
+  <div class="card-soft p-5">
+    <h3 class="text-base font-semibold text-foreground">Participação dos empregos CLT de TIC no total de empregos CLT</h3>
+    <ul class="mt-4 space-y-3">
+      {% for item in participacao_barras %}
+      <li class="flex items-center gap-3">
+        <span class="w-12 font-mono text-xs text-muted-foreground">{{ item.ano }}</span>
+        <span class="h-3 flex-1 overflow-hidden rounded-full bg-muted">
+          <span class="block h-full rounded-full bg-primary" style="width: {{ item.largura_pct }}%"></span>
+        </span>
+        <span class="w-12 text-right text-xs font-semibold text-foreground">{{ item.valor_fmt }}%</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-3">
+    {% for periodo in brasil.brasscom.periodos %}
+    {% include "partials/_info_card.html" with title=periodo.intervalo body=periodo.texto %}
+    {% endfor %}
+  </div>
+
+  {% include "partials/_callout.html" with body=brasil.brasscom.transformacao %}
+
+  <div class="card-soft overflow-x-auto">
+    <table class="w-full min-w-[36rem] text-left text-sm">
+      <caption class="sr-only">Top 5 ocupações de TIC no Brasil segundo o relatório Brasscom</caption>
+      <thead class="bg-muted-soft text-xs uppercase text-muted-foreground">
+        <tr>
+          <th scope="col" class="px-4 py-3">#</th>
+          <th scope="col" class="px-4 py-3">Ocupação</th>
+          <th scope="col" class="px-4 py-3">Empregos CLT</th>
+          <th scope="col" class="px-4 py-3">Part.</th>
+          <th scope="col" class="px-4 py-3">Salário médio</th>
+          <th scope="col" class="px-4 py-3">Empregos gerados</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in brasil.brasscom.top_ocupacoes %}
+        <tr class="border-t border-border">
+          <td class="px-4 py-3 font-semibold text-primary">{{ item.posicao }}</td>
+          <td class="px-4 py-3 text-foreground">{{ item.ocupacao }}</td>
+          <td class="px-4 py-3 text-muted-foreground">{{ item.empregos }}</td>
+          <td class="px-4 py-3 text-muted-foreground">{{ item.participacao }}</td>
+          <td class="px-4 py-3 text-muted-foreground">{{ item.salario }}</td>
+          <td class="px-4 py-3 text-muted-foreground">{{ item.gerados }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-muted-foreground">{{ brasil.brasscom.fonte }}</p>
+</section>
+{% endblock %}

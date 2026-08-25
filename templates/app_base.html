@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+<div class="min-h-screen bg-background">
+  <!-- Sidebar fixo — ocupa toda a altura da tela e não rola com o conteúdo -->
+  <aside class="fixed inset-y-0 left-0 z-40 hidden w-72 bg-sidebar lg:block">
+    {% include "partials/_sidebar_nav.html" %}
+  </aside>
+
+  <!-- Drawer mobile -->
+  <div class="fixed inset-0 z-50 hidden lg:hidden" data-mobile-drawer>
+    <button type="button" aria-label="Fechar menu" class="absolute inset-0 bg-overlay-scrim" data-mobile-menu-close></button>
+    <aside class="absolute inset-y-0 left-0 w-72 max-w-[85vw] bg-sidebar shadow-[var(--shadow-lift)]">
+      {% include "partials/_sidebar_nav.html" %}
+    </aside>
+  </div>
+
+  <div class="lg:pl-72">
+    <header class="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-background-translucent px-4 py-3 backdrop-blur lg:hidden">
+      <button type="button" aria-label="Abrir menu de navegação" data-mobile-menu-open
+        class="inline-flex items-center justify-center rounded-md h-9 w-9 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer">
+        <i data-lucide="menu" class="size-5"></i>
+      </button>
+      <span class="truncate text-sm font-semibold">{% block page_title %}{{ current_nav_label }}{% endblock %}</span>
+    </header>
+
+    <main class="min-h-screen">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "app_base.html" %}
+{% load static %}
+
+{% block title %}Apresentação — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Identificação acadêmica e introdução do trabalho sobre Desenvolvimento Back-end (UNIPÊ, 2026.2).{% endblock %}
+
+{% block content %}
+<article class="section-enter mx-auto w-full max-w-4xl px-5 py-10 sm:px-8 lg:py-14">
+  <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <img
+      src="{% static 'img/unipe-logo.png' %}"
+      alt="Logo do Centro Universitário de João Pessoa (UNIPÊ)"
+      class="h-16 w-auto max-w-[16rem] object-contain"
+    />
+    <span class="rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
+      Período {{ institutional.periodo }}
+    </span>
+  </div>
+
+  <section class="mt-10 rounded-2xl bg-primary px-6 py-10 text-primary-foreground sm:px-10 sm:py-14">
+    <p class="text-xs font-semibold tracking-[0.16em] text-accent uppercase">Tema</p>
+    <h1 class="mt-3 text-4xl leading-tight font-semibold sm:text-5xl">{{ institutional.tema }}</h1>
+    <p class="mt-4 max-w-xl text-sm text-primary-foreground-muted">
+      {{ institutional.componente }} · {{ institutional.curso }} · {{ institutional.instituicao }}
+    </p>
+  </section>
+
+  <section class="mt-10 grid gap-4 sm:grid-cols-2">
+    <div class="card-soft h-full p-5 transition-shadow hover:shadow-[var(--shadow-lift)]">
+      <h3 class="mt-1 text-lg font-semibold text-foreground">Identificação acadêmica</h3>
+      <div class="mt-2 text-sm leading-relaxed text-muted-foreground">
+        <ul class="space-y-1.5">
+          <li><strong class="text-foreground">Instituição:</strong> {{ institutional.instituicao }}</li>
+          <li><strong class="text-foreground">Curso:</strong> {{ institutional.curso }}</li>
+          <li><strong class="text-foreground">Componente curricular:</strong> {{ institutional.componente }}</li>
+          <li><strong class="text-foreground">Período:</strong> {{ institutional.periodo }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card-soft h-full p-5 transition-shadow hover:shadow-[var(--shadow-lift)]">
+      <h3 class="mt-1 text-lg font-semibold text-foreground">Docente</h3>
+      <div class="mt-2 text-sm leading-relaxed text-muted-foreground">
+        <p class="flex items-start gap-2">
+          <i data-lucide="graduation-cap" class="mt-0.5 size-4 shrink-0 text-primary"></i>
+          {{ institutional.docente }}
+        </p>
+        <h4 class="mt-4 flex items-center gap-2 text-sm font-semibold text-foreground">
+          <i data-lucide="users" class="size-4 text-primary"></i> Discentes
+        </h4>
+        <ul class="mt-2 space-y-1">
+          {% for nome in institutional.discentes %}
+          <li>{{ nome }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}

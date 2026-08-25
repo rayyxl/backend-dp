@@ -1,0 +1,18 @@
+{% extends "presentation/_section_base.html" %}
+
+{% block title %}Conceito da área — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}O que é o back-end: a parte do sistema responsável por lógica, armazenamento de dados e comunicação entre as partes.{% endblock %}
+
+{% block section_body %}
+{% for paragrafo in conceito_area.paragrafos %}
+<p class="text-lg leading-relaxed text-foreground">{{ paragrafo }}</p>
+{% endfor %}
+
+<div class="grid gap-4 sm:grid-cols-2">
+  {% for pilar in pilares %}
+  {% include "partials/_info_card.html" with title=pilar.title icon=pilar.icon body=pilar.text %}
+  {% endfor %}
+</div>
+
+{% include "partials/_callout.html" with body=conceito_area.exemplo %}
+{% endblock %}

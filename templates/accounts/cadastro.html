@@ -1,0 +1,76 @@
+{% extends "accounts/auth_shell.html" %}
+
+{% block title %}Criar conta — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Crie sua conta para acessar a apresentação interativa sobre Desenvolvimento Back-end (UNIPÊ, 2026.2).{% endblock %}
+
+{% block auth_title %}Criar conta{% endblock %}
+{% block auth_subtitle %}Cadastre-se para acessar a apresentação sobre Desenvolvimento Back-end.{% endblock %}
+
+{% block auth_content %}
+<form method="post" action="{% url 'accounts:cadastro' %}" class="space-y-4" novalidate>
+  {% csrf_token %}
+  <div class="space-y-2">
+    <label for="nome" class="text-sm font-medium leading-none">Nome</label>
+    <input
+      id="nome"
+      name="nome"
+      autocomplete="name"
+      placeholder="Seu nome completo"
+      value="{{ form_values.nome }}"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+    />
+  </div>
+  <div class="space-y-2">
+    <label for="email" class="text-sm font-medium leading-none">E-mail</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      placeholder="seu.email@exemplo.com"
+      value="{{ form_values.email }}"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+    />
+  </div>
+  <div class="space-y-2">
+    <label for="password" class="text-sm font-medium leading-none">Senha</label>
+    <input
+      id="password"
+      name="password"
+      type="password"
+      autocomplete="new-password"
+      placeholder="Mínimo de 6 caracteres"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+    />
+  </div>
+  <div class="space-y-2">
+    <label for="confirm" class="text-sm font-medium leading-none">Confirmar senha</label>
+    <input
+      id="confirm"
+      name="confirm"
+      type="password"
+      autocomplete="new-password"
+      placeholder="Repita a senha"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+    />
+  </div>
+
+  {% if error %}
+  <p role="alert" class="text-sm font-medium text-destructive">{{ error }}</p>
+  {% endif %}
+
+  <button
+    type="submit"
+    class="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 h-9 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary-hover cursor-pointer"
+  >
+    <i data-lucide="user-plus" class="size-4"></i>
+    Criar conta
+  </button>
+</form>
+{% endblock %}
+
+{% block auth_footer %}
+<div class="mt-5 text-center text-sm">
+  <a href="{% url 'accounts:login' %}" class="font-medium text-primary hover:underline">Já tenho conta — Entrar</a>
+</div>
+{% endblock %}

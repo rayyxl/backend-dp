@@ -1,0 +1,12 @@
+{% extends "presentation/_section_base.html" %}
+
+{% block title %}Principais conceitos estudados — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Servidor, banco de dados, lógica de negócio, API e autenticação e autorização: os conceitos estudados no trabalho.{% endblock %}
+
+{% block section_body %}
+<div class="grid gap-4 sm:grid-cols-2">
+  {% for conceito in conceitos_estudados %}
+  {% include "partials/_info_card.html" with index=conceito.numero title=conceito.titulo body=conceito.texto %}
+  {% endfor %}
+</div>
+{% endblock %}

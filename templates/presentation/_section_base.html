@@ -1,0 +1,16 @@
+{% extends "app_base.html" %}
+
+{% block content %}
+<article class="section-enter mx-auto w-full max-w-4xl px-5 py-10 sm:px-8 lg:py-14">
+  <header class="max-w-3xl">
+    <p class="eyebrow">{{ eyebrow }}</p>
+    <h1 class="mt-2 text-3xl font-semibold text-foreground sm:text-4xl">{{ title }}</h1>
+    {% if intro %}
+    <p class="mt-4 text-base leading-relaxed text-muted-foreground">{{ intro }}</p>
+    {% endif %}
+  </header>
+  <div class="mt-9 space-y-8">
+    {% block section_body %}{% endblock %}
+  </div>
+</article>
+{% endblock %}

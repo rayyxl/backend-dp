@@ -1,0 +1,231 @@
+{% extends "accounts/auth_shell.html" %}
+
+{% block title %}Recuperar acesso — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Recupere o acesso à apresentação interativa sobre Desenvolvimento Back-end em três etapas guiadas.{% endblock %}
+
+{% block auth_title %}Recuperar acesso{% endblock %}
+{% block auth_subtitle %}Siga as etapas abaixo para definir uma nova senha.{% endblock %}
+
+{% block auth_content %}
+<ol class="mb-6 flex items-center gap-2" aria-label="Etapas da recuperação" data-stepper>
+  <li class="flex flex-1 items-center gap-2" data-step-indicator="0">
+    <span class="flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors bg-accent text-accent-foreground" data-step-badge>1</span>
+    <span class="hidden text-xs sm:block font-semibold text-foreground" data-step-label>E-mail</span>
+  </li>
+  <li class="flex flex-1 items-center gap-2" data-step-indicator="1">
+    <span class="flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors bg-muted text-muted-foreground" data-step-badge>2</span>
+    <span class="hidden text-xs sm:block text-muted-foreground" data-step-label>Código</span>
+  </li>
+  <li class="flex flex-1 items-center gap-2" data-step-indicator="2">
+    <span class="flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors bg-muted text-muted-foreground" data-step-badge>3</span>
+    <span class="hidden text-xs sm:block text-muted-foreground" data-step-label>Nova senha</span>
+  </li>
+</ol>
+
+<!-- Etapa 1: E-mail -->
+<form data-step-form="0" class="space-y-4" novalidate>
+  <div class="space-y-2">
+    <label for="email" class="text-sm font-medium leading-none">E-mail da conta</label>
+    <input id="email" type="email" autocomplete="email" placeholder="seu.email@exemplo.com"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+  </div>
+  <p role="alert" class="hidden text-sm font-medium text-destructive" data-error></p>
+  <button type="submit"
+    class="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 h-9 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+    <i data-lucide="mail" class="size-4" data-icon-idle></i>
+    <i data-lucide="loader-2" class="size-4 hidden animate-spin" data-icon-loading></i>
+    <span data-label>Enviar código por e-mail</span>
+  </button>
+</form>
+
+<!-- Etapa 2: Código -->
+<form data-step-form="1" class="hidden space-y-4" novalidate>
+  <div class="rounded-lg border border-accent-soft-border bg-accent-soft-bg p-3 text-sm">
+    <p class="font-medium text-foreground">Enviamos um código de 6 dígitos para o seu e-mail.</p>
+    <p class="mt-1 text-xs text-muted-foreground">
+      Verifique também a caixa de spam. O código é válido por 15 minutos e só pode ser usado uma vez.
+    </p>
+  </div>
+  <div class="space-y-2">
+    <label for="code" class="text-sm font-medium leading-none">Código de 6 dígitos</label>
+    <input id="code" inputmode="numeric" maxlength="6" placeholder="000000"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+  </div>
+  <p role="alert" class="hidden text-sm font-medium text-destructive" data-error></p>
+  <button type="submit"
+    class="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 h-9 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+    <i data-lucide="arrow-right" class="size-4" data-icon-idle></i>
+    <i data-lucide="loader-2" class="size-4 hidden animate-spin" data-icon-loading></i>
+    <span data-label>Validar código</span>
+  </button>
+</form>
+
+<!-- Etapa 3: Nova senha -->
+<form data-step-form="2" class="hidden space-y-4" novalidate>
+  <div class="space-y-2">
+    <label for="password" class="text-sm font-medium leading-none">Nova senha</label>
+    <input id="password" type="password" autocomplete="new-password" placeholder="Mínimo de 6 caracteres"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+  </div>
+  <div class="space-y-2">
+    <label for="confirm" class="text-sm font-medium leading-none">Confirmar nova senha</label>
+    <input id="confirm" type="password" autocomplete="new-password" placeholder="Repita a nova senha"
+      class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+  </div>
+  <p role="alert" class="hidden text-sm font-medium text-destructive" data-error></p>
+  <button type="submit"
+    class="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 h-9 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+    <i data-lucide="key-round" class="size-4" data-icon-idle></i>
+    <i data-lucide="loader-2" class="size-4 hidden animate-spin" data-icon-loading></i>
+    <span data-label>Atualizar senha</span>
+  </button>
+</form>
+{% endblock %}
+
+{% block auth_footer %}
+<div class="mt-5 text-center text-sm">
+  <a href="{% url 'accounts:login' %}" class="font-medium text-primary hover:underline">Voltar para o login</a>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+  const STEP_LABELS = ["E-mail", "Código", "Nova senha"];
+  const URLS = {
+    request: "{% url 'accounts:request_reset_code' %}",
+    verify: "{% url 'accounts:verify_reset_code' %}",
+    reset: "{% url 'accounts:reset_password' %}",
+  };
+  const LOGIN_URL = "{% url 'accounts:login' %}";
+
+  let step = 0;
+  let email = "";
+  let code = "";
+
+  const forms = document.querySelectorAll("[data-step-form]");
+
+  function renderStepper() {
+    document.querySelectorAll("[data-step-indicator]").forEach((li) => {
+      const index = Number(li.dataset.stepIndicator);
+      const badge = li.querySelector("[data-step-badge]");
+      const label = li.querySelector("[data-step-label]");
+      badge.classList.remove("bg-primary", "text-primary-foreground", "bg-accent", "text-accent-foreground", "bg-muted", "text-muted-foreground");
+      label.classList.remove("font-semibold", "text-foreground", "text-muted-foreground");
+      if (index < step) {
+        badge.classList.add("bg-primary", "text-primary-foreground");
+        badge.innerHTML = '<i data-lucide="check" class="size-3.5"></i>';
+        label.classList.add("text-muted-foreground");
+      } else if (index === step) {
+        badge.classList.add("bg-accent", "text-accent-foreground");
+        badge.textContent = String(index + 1);
+        label.classList.add("font-semibold", "text-foreground");
+      } else {
+        badge.classList.add("bg-muted", "text-muted-foreground");
+        badge.textContent = String(index + 1);
+        label.classList.add("text-muted-foreground");
+      }
+    });
+    refreshIcons();
+  }
+
+  function showStep(next) {
+    step = next;
+    forms.forEach((form) => {
+      form.classList.toggle("hidden", Number(form.dataset.stepForm) !== step);
+    });
+    renderStepper();
+  }
+
+  function setLoading(form, loading) {
+    const button = form.querySelector("button[type=submit]");
+    button.disabled = loading;
+    form.querySelector("[data-icon-idle]").classList.toggle("hidden", loading);
+    form.querySelector("[data-icon-loading]").classList.toggle("hidden", !loading);
+    form.querySelector("[data-label]").textContent = loading
+      ? { 0: "Enviando...", 1: "Validando...", 2: "Atualizando..." }[form.dataset.stepForm]
+      : { 0: "Enviar código por e-mail", 1: "Validar código", 2: "Atualizar senha" }[form.dataset.stepForm];
+  }
+
+  function setError(form, message) {
+    const el = form.querySelector("[data-error]");
+    if (message) {
+      el.textContent = message;
+      el.classList.remove("hidden");
+    } else {
+      el.classList.add("hidden");
+    }
+  }
+
+  forms[0].addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = forms[0];
+    setError(form, null);
+    const value = form.querySelector("#email").value.trim();
+    if (!value) return setError(form, "Informe o seu e-mail.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return setError(form, "Informe um e-mail válido.");
+
+    email = value.toLowerCase();
+    setLoading(form, true);
+    try {
+      // A resposta nunca contém o código — ele é enviado exclusivamente
+      // por e-mail via Brevo. Aqui só confirmamos que a solicitação foi
+      // aceita e avançamos para a etapa de digitar o código recebido.
+      await apiFetch(URLS.request, { method: "POST", body: JSON.stringify({ email }) });
+      showStep(1);
+    } catch (err) {
+      setError(form, err.message);
+    } finally {
+      setLoading(form, false);
+    }
+  });
+
+  forms[1].addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = forms[1];
+    setError(form, null);
+    const value = form.querySelector("#code").value.trim();
+    if (value.length !== 6) return setError(form, "Informe o código de 6 dígitos.");
+
+    setLoading(form, true);
+    try {
+      await apiFetch(URLS.verify, { method: "POST", body: JSON.stringify({ email, code: value }) });
+      code = value;
+      showStep(2);
+    } catch (err) {
+      setError(form, err.message);
+    } finally {
+      setLoading(form, false);
+    }
+  });
+
+  document.querySelector("#code")?.addEventListener("input", (event) => {
+    event.target.value = event.target.value.replace(/\D/g, "");
+  });
+
+  forms[2].addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = forms[2];
+    setError(form, null);
+    const password = form.querySelector("#password").value;
+    const confirm = form.querySelector("#confirm").value;
+    if (!password || !confirm) return setError(form, "Preencha os dois campos de senha.");
+    if (password.length < 6) return setError(form, "A senha deve ter no mínimo 6 caracteres.");
+    if (password !== confirm) return setError(form, "As senhas não coincidem.");
+
+    setLoading(form, true);
+    try {
+      await apiFetch(URLS.reset, { method: "POST", body: JSON.stringify({ email, code, password }) });
+      sessionStorage.setItem("flash_success", "Senha atualizada! Faça login com a nova senha.");
+      window.location.href = LOGIN_URL;
+    } catch (err) {
+      setError(form, err.message);
+    } finally {
+      setLoading(form, false);
+    }
+  });
+
+  renderStepper();
+})();
+</script>
+{% endblock %}

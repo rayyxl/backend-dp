@@ -1,0 +1,179 @@
+/*
+ * Design system — Apresentação acadêmica "Desenvolvimento Back-end" (UNIPÊ).
+ * Paleta: azul institucional profundo + amarelo UNIPÊ como acento.
+ * Todas as cores em oklch, portadas 1:1 do projeto original
+ * (src/styles.css do repositório Lovable/React).
+ */
+
+:root {
+  --radius: 0.875rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --background: oklch(0.985 0.005 250);
+  --foreground: oklch(0.24 0.055 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.055 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.055 258);
+
+  --primary: oklch(0.32 0.09 258);
+  --primary-foreground: oklch(0.985 0.005 250);
+  --secondary: oklch(0.95 0.012 250);
+  --secondary-foreground: oklch(0.32 0.09 258);
+  --muted: oklch(0.955 0.01 250);
+  --muted-foreground: oklch(0.52 0.03 256);
+  --accent: oklch(0.86 0.16 91);
+  --accent-foreground: oklch(0.26 0.06 258);
+
+  --destructive: oklch(0.56 0.2 25);
+  --destructive-foreground: oklch(0.985 0.005 250);
+  --border: oklch(0.915 0.012 250);
+  --input: oklch(0.915 0.012 250);
+  --ring: oklch(0.55 0.09 258);
+
+  --chart-1: oklch(0.4 0.11 258);
+  --chart-2: oklch(0.62 0.13 230);
+  --chart-3: oklch(0.86 0.16 91);
+  --chart-4: oklch(0.55 0.1 200);
+  --chart-5: oklch(0.7 0.11 150);
+
+  --sidebar: oklch(0.245 0.058 259);
+  --sidebar-foreground: oklch(0.93 0.01 250);
+  --sidebar-primary: oklch(0.86 0.16 91);
+  --sidebar-primary-foreground: oklch(0.24 0.055 258);
+  --sidebar-accent: oklch(0.31 0.06 259);
+  --sidebar-accent-foreground: oklch(0.97 0.005 250);
+  --sidebar-border: oklch(0.34 0.05 259);
+  --sidebar-ring: oklch(0.86 0.16 91);
+
+  /*
+   * Variantes com transparência pré-computada.
+   *
+   * IMPORTANTE: não usar o modificador de opacidade do Tailwind (ex.:
+   * "bg-primary/90") em cima de cores customizadas mapeadas para var(...).
+   * O Tailwind precisa conhecer o valor literal da cor em tempo de build
+   * para calcular a mistura de opacidade; como o valor real só existe em
+   * tempo de execução (dentro da CSS custom property), o Tailwind Play CDN
+   * descarta essas classes silenciosamente — sem erro, sem aviso — e o
+   * elemento fica com a cor herdada (frequentemente invisível). Esse foi
+   * exatamente o bug relatado na sidebar ("texto só aparece no hover").
+   * Por isso, toda variação com transparência é definida aqui, com o alfa
+   * já embutido via a sintaxe nativa oklch(L C H / A), e referenciada como
+   * uma cor Tailwind normal — sem modificador "/NN" em nenhum lugar do projeto.
+   */
+  --primary-hover: oklch(0.32 0.09 258 / 0.9);
+  --primary-soft: oklch(0.32 0.09 258 / 0.1);
+  --primary-foreground-muted: oklch(0.985 0.005 250 / 0.8);
+  --accent-soft: oklch(0.86 0.16 91 / 0.1);
+  --accent-soft-bg: oklch(0.86 0.16 91 / 0.15);
+  --accent-soft-border: oklch(0.86 0.16 91 / 0.5);
+  --muted-soft: oklch(0.955 0.01 250 / 0.6);
+  --destructive-soft: oklch(0.56 0.2 25 / 0.1);
+  --overlay-scrim: oklch(0.24 0.055 258 / 0.4);
+  --background-translucent: oklch(0.985 0.005 250 / 0.85);
+  --sidebar-foreground-muted: oklch(0.93 0.01 250 / 0.8);
+  --sidebar-caption: oklch(0.93 0.01 250 / 0.7);
+  --sidebar-accent-hover: oklch(0.31 0.06 259 / 0.6);
+
+  --shadow-soft: 0 1px 2px oklch(0.23 0.08 258 / 0.04), 0 12px 32px oklch(0.23 0.08 258 / 0.07);
+  --shadow-lift: 0 2px 4px oklch(0.23 0.08 258 / 0.06), 0 24px 48px oklch(0.23 0.08 258 / 0.12);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.015em;
+}
+
+/* Fundo técnico discreto usado nas telas de autenticação */
+.bg-grid {
+  background-image:
+    radial-gradient(circle at 15% 10%, oklch(0.32 0.09 258 / 0.16), transparent 45%),
+    radial-gradient(circle at 85% 85%, oklch(0.86 0.16 91 / 0.14), transparent 45%),
+    linear-gradient(to right, oklch(0.32 0.09 258 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.32 0.09 258 / 0.07) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    52px 52px,
+    52px 52px;
+}
+
+.card-soft {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+}
+
+.eyebrow {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.section-enter {
+  animation: section-enter 0.35s ease-out both;
+}
+
+@keyframes section-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Placeholder de imagem — usado quando o asset original ainda não foi
+   substituído por um arquivo real (ver README, seção "Assets"). */
+.asset-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--muted),
+    var(--muted) 10px,
+    var(--secondary) 10px,
+    var(--secondary) 20px
+  );
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Scrollbar discreta no sidebar (equivalente ao overflow-y-auto original) */
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background-color: var(--sidebar-border);
+  border-radius: 999px;
+}

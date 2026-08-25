@@ -1,0 +1,7 @@
+{% load static %}
+<figure class="card-soft overflow-hidden">
+  <img src="{% static src %}" alt="{{ alt }}" loading="lazy" class="block h-auto w-full max-w-full object-contain" />
+  {% if caption %}
+  <figcaption class="border-t border-border px-4 py-3 text-xs leading-relaxed text-muted-foreground">{{ caption }}</figcaption>
+  {% endif %}
+</figure>

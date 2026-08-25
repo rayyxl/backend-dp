@@ -1,0 +1,20 @@
+{% extends "presentation/_section_base.html" %}
+
+{% block title %}Porta de entrada — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Do estágio ao sênior: como um iniciante ingressa na área de desenvolvimento back-end segundo o trabalho.{% endblock %}
+
+{% block section_body %}
+<ol class="relative space-y-5 border-l-2 border-border pl-6">
+  {% for etapa in porta_entrada.fluxo %}
+  <li class="relative">
+    <span class="absolute -left-[1.9rem] flex size-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+      {{ forloop.counter }}
+    </span>
+    <div class="card-soft p-4">
+      <h3 class="text-base font-semibold text-foreground">{{ etapa.nivel }}</h3>
+      <p class="mt-1 text-sm leading-relaxed text-muted-foreground">{{ etapa.texto }}</p>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+{% endblock %}

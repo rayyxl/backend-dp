@@ -1,0 +1,17 @@
+{% extends "presentation/_section_base.html" %}
+
+{% block title %}O que surpreendeu a equipe — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}A conclusão da equipe: o back-end como base da tecnologia corporativa moderna e do crescimento do negócio.{% endblock %}
+
+{% block section_body %}
+<blockquote class="rounded-2xl bg-primary px-6 py-8 text-primary-foreground sm:px-8">
+  <i data-lucide="quote" class="size-6 text-accent"></i>
+  <p class="mt-3 text-lg leading-relaxed">{{ surpreendeu.texto }}</p>
+</blockquote>
+
+<div class="grid gap-4 sm:grid-cols-3">
+  {% for destaque in surpreendeu.destaques %}
+  {% include "partials/_info_card.html" with title=destaque.titulo body=destaque.texto %}
+  {% endfor %}
+</div>
+{% endblock %}

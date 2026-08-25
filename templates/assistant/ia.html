@@ -1,0 +1,84 @@
+{% extends "app_base.html" %}
+{% load static %}
+
+{% block title %}IA Generativa — Desenvolvimento Back-end | UNIPÊ{% endblock %}
+{% block description %}Converse com um assistente de IA sobre desenvolvimento back-end e sobre o conteúdo do trabalho acadêmico, com histórico salvo.{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen flex-col lg:h-screen lg:flex-row" data-ia-root>
+  <aside class="border-b border-border bg-card px-4 py-4 lg:h-full lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:border-r lg:border-b-0">
+    <button
+      type="button"
+      data-new-chat
+      class="inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 h-9 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <i data-lucide="message-square-plus" class="size-4"></i> Nova conversa
+    </button>
+    <p class="eyebrow mt-5">Histórico</p>
+    <ul class="mt-2 space-y-1" data-conversation-list>
+      <li class="px-3 py-2 text-sm text-muted-foreground" data-loading-conversations>Carregando...</li>
+    </ul>
+  </aside>
+
+  <section class="flex min-h-0 flex-1 flex-col">
+    <header class="border-b border-border px-5 py-4">
+      <h1 class="flex items-center gap-2 text-lg font-semibold text-foreground">
+        <i data-lucide="sparkles" class="size-5 text-primary"></i> IA Generativa
+      </h1>
+      <p class="mt-1 text-sm text-muted-foreground">
+        Pergunte sobre desenvolvimento back-end ou sobre o conteúdo deste trabalho.
+      </p>
+    </header>
+
+    <div class="flex-1 space-y-4 overflow-y-auto px-5 py-6" data-messages>
+      <div class="mx-auto max-w-xl text-center" data-empty-state>
+        <p class="text-sm text-muted-foreground">Comece com uma das sugestões abaixo:</p>
+        <div class="mt-4 grid gap-2 sm:grid-cols-2" data-suggestions>
+          <button type="button" data-suggestion class="card-soft px-4 py-3 text-left text-sm text-foreground transition-shadow hover:shadow-[var(--shadow-lift)]">
+            Explique o que é uma API de forma simples.
+          </button>
+          <button type="button" data-suggestion class="card-soft px-4 py-3 text-left text-sm text-foreground transition-shadow hover:shadow-[var(--shadow-lift)]">
+            Quais competências o trabalho cita para começar no back-end?
+          </button>
+          <button type="button" data-suggestion class="card-soft px-4 py-3 text-left text-sm text-foreground transition-shadow hover:shadow-[var(--shadow-lift)]">
+            Qual a diferença entre autenticação e autorização?
+          </button>
+          <button type="button" data-suggestion class="card-soft px-4 py-3 text-left text-sm text-foreground transition-shadow hover:shadow-[var(--shadow-lift)]">
+            O que os dados da Brasscom mostram sobre o mercado de TI?
+          </button>
+        </div>
+      </div>
+
+      <div data-pending class="hidden flex justify-start">
+        <div class="card-soft flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground">
+          <i data-lucide="loader-2" class="size-4 animate-spin"></i> Pensando...
+        </div>
+      </div>
+      <div data-scroll-anchor></div>
+    </div>
+
+    <form data-ask-form class="border-t border-border px-5 py-4">
+      <div class="flex items-end gap-2">
+        <label for="question" class="sr-only">Sua pergunta</label>
+        <textarea
+          id="question"
+          name="question"
+          rows="2"
+          placeholder="Escreva sua pergunta..."
+          class="max-h-40 min-h-[2.75rem] flex-1 resize-y rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        ></textarea>
+        <button type="submit" data-send-button
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary text-primary-foreground shadow transition-colors hover:bg-primary-hover h-9 w-9 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+          <i data-lucide="send" class="size-4" data-icon-idle></i>
+          <i data-lucide="loader-2" class="size-4 hidden animate-spin" data-icon-loading></i>
+          <span class="sr-only">Enviar pergunta</span>
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/ia.js' %}"></script>
+{% endblock %}
