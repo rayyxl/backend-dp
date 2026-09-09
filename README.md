@@ -1,12 +1,15 @@
-# Desenvolvimento Back-end — Apresentação UNIPÊ (réplica em Django)
+# Desenvolvimento Back-end — Apresentação UNIPÊ
 
 Réplica funcional e visual, em **Python + Django**, do projeto acadêmico
 originalmente gerado com **Lovable** (React 19 + TanStack Start + Supabase),
 disponível em `academy-ascii`. O objetivo desta versão é reproduzir o mais
 fielmente possível a experiência do usuário do projeto original — layout,
 cores, tipografia, fluxos de navegação e funcionalidades — usando uma stack
-100% Django, sem depender de nenhum serviço externo obrigatório (roda
-localmente com SQLite).
+100% Django.
+
+> **Aplicação publicada:** https://backend-dp-umber.vercel.app/
+> Hospedada na **Vercel**, com banco de dados **Supabase** (PostgreSQL
+> gerenciado).
 
 ## Sumário
 
@@ -25,7 +28,7 @@ localmente com SQLite).
 - [Páginas e rotas](#páginas-e-rotas)
 - [Assets / imagens](#assets--imagens)
 - [Configuração das APIs externas](#configuração-das-apis-externas)
-- [Deploy no PythonAnywhere](#deploy-no-pythonanywhere)
+- [Deploy na Vercel](#deploy-na-vercel)
 - [Estrutura de diretórios](#estrutura-de-diretórios)
 - [Diferenças conscientes em relação ao original](#diferenças-conscientes-em-relação-ao-original)
 
@@ -44,6 +47,10 @@ O projeto apresenta um trabalho acadêmico de Ciência da Computação (UNIPÊ,
   que responde tanto sobre desenvolvimento back-end em geral quanto sobre o
   conteúdo do próprio trabalho.
 
+A aplicação está publicada na **Vercel** e usa o **Supabase** (PostgreSQL
+gerenciado) como banco de dados, tanto em desenvolvimento quanto em
+produção. Acesso: **https://backend-dp-umber.vercel.app/**.
+
 ## Arquitetura
 
 - **Backend:** Django (views + `JsonResponse`, sem Django REST Framework —
@@ -51,8 +58,12 @@ O projeto apresenta um trabalho acadêmico de Ciência da Computação (UNIPÊ,
 - **Frontend:** Django Templates + Tailwind CSS (via CDN, configurado para
   usar exatamente os mesmos tokens de cor/raio do projeto original) + CSS
   próprio (`static/css/styles.css`) + JavaScript puro (sem framework).
-- **Banco de dados:** SQLite (padrão do Django, nenhuma configuração
-  externa necessária).
+- **Banco de dados:** **Supabase** (PostgreSQL gerenciado), acessado
+  diretamente via `DATABASE_URL` (driver `psycopg`/`psycopg2`, sem uso do
+  SDK/Auth da Supabase). O uso do Supabase é necessário porque a aplicação
+  roda na Vercel como funções serverless, sem sistema de arquivos
+  persistente — um banco local como SQLite não seria viável em produção.
+- **Hospedagem:** **Vercel** (deploy automático a cada `git push`).
 - **IA:** SDK oficial do Google Gemini (`google-genai`), feita inteiramente
   no backend (`assistant/services.py`).
 - **E-mail:** integração opcional com a Brevo para o envio do código de
@@ -69,7 +80,7 @@ O projeto apresenta um trabalho acadêmico de Ciência da Computação (UNIPÊ,
 ## Models
 
 **`accounts.User`** (usuário customizado, `AUTH_USER_MODEL`)
-Equivale à junção de `auth.users` + `public.profiles` do Supabase no
+Equivale à junção de `auth.users` + `public.profiles` do Supabase Auth no
 projeto original.
 - `id` (UUID), `email` (único, usado para login), `nome`, `is_active`,
   `is_staff`, `created_at`, `password` (hash, nunca em texto puro).
@@ -86,12 +97,20 @@ Réplica da tabela `password_reset_codes` original.
 - `id` (UUID), `conversation` (FK), `role` (`user`/`assistant`), `content`,
   `created_at`.
 
+Todos esses models são persistidos no **Supabase** (PostgreSQL), tanto em
+desenvolvimento quanto em produção.
+
 O conteúdo acadêmico (textos, dados da Brasscom, etc.) **não** é modelado em
 banco de dados porque, no projeto original, também é conteúdo estático
 embutido no frontend (`src/content/presentation.ts`) — aqui ele foi portado
 integralmente para `presentation/content.py`, mantendo o mesmo texto.
 
 ## Instalação
+
+Antes de começar, crie um projeto gratuito em [supabase.com](https://supabase.com)
+e copie a *connection string* do banco (aba **Project Settings → Database**,
+formato `postgresql://usuario:senha@host:porta/nome_do_banco`) — ela será
+usada como `DATABASE_URL` no passo 4.
 
 ```bash
 # 1. Clone ou extraia o projeto e entre na pasta
@@ -107,9 +126,10 @@ pip install -r requirements.txt
 
 # 4. Copie o arquivo de variáveis de ambiente
 cp .env.example .env
-# edite o .env e preencha SECRET_KEY, GEMINI_API_KEY, BREVO_* (opcional)
+# edite o .env e preencha SECRET_KEY, DATABASE_URL (connection string do
+# Supabase), GEMINI_API_KEY, BREVO_* (opcional)
 
-# 5. Rode as migrations
+# 5. Rode as migrations (aplicadas diretamente no Supabase)
 python manage.py makemigrations
 python manage.py migrate
 
@@ -130,6 +150,8 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=
 
+DATABASE_URL=postgresql://usuario:senha@host:porta/nome_do_banco
+
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-3.6-flash
 
@@ -139,6 +161,10 @@ BREVO_SENDER_NAME=Desenvolvimento Back-end — UNIPÊ
 ```
 
 - `SECRET_KEY`: gere uma string aleatória (ex.: `python -c "import secrets; print(secrets.token_urlsafe(50))"`).
+- `DATABASE_URL`: connection string do projeto **Supabase** (PostgreSQL) —
+  obrigatória tanto em desenvolvimento quanto em produção, já que este
+  projeto não usa SQLite. Copie-a em **Project Settings → Database** no
+  painel do Supabase.
 - `GEMINI_API_KEY`: necessária apenas para o chat de IA funcionar de fato;
   sem ela, o restante do sistema funciona normalmente e o chat retorna uma
   mensagem de erro amigável.
@@ -157,7 +183,7 @@ Comandos úteis durante o desenvolvimento:
 
 ```bash
 python manage.py makemigrations   # gerar novas migrations após mudar um model
-python manage.py migrate          # aplicar migrations
+python manage.py migrate          # aplicar migrations no Supabase
 python manage.py collectstatic    # coletar estáticos (para deploy)
 python manage.py createsuperuser  # criar acesso ao /admin/
 ```
@@ -203,8 +229,8 @@ Regras de segurança aplicadas:
 
 - O código de 6 dígitos é gerado aleatoriamente no backend
   (`secrets.randbelow`), válido por **15 minutos**, e apenas seu **hash
-  SHA-256** é gravado no banco (`PasswordResetCode.code_hash`) — nunca o
-  código em texto puro, nunca em log.
+  SHA-256** é gravado no banco Supabase (`PasswordResetCode.code_hash`) —
+  nunca o código em texto puro, nunca em log.
 - **O código NUNCA é devolvido ao frontend.** Ele só existe (a) em memória
   durante o processamento do request, (b) como hash no banco, e (c) no
   corpo do e-mail realmente enviado pela **Brevo** (SDK oficial
@@ -253,8 +279,8 @@ Regras de segurança aplicadas:
   - erro no servidor do Gemini (5xx) → "O serviço de IA está temporariamente indisponível. Tente novamente em instantes.";
   - qualquer outra falha (rede, modelo inexistente, resposta vazia/bloqueada etc.) → "Não foi possível enviar sua pergunta." (o chat continua funcionando normalmente e o usuário pode tentar de novo).
 - Todas as mensagens (pergunta do usuário e resposta da IA) são persistidas
-  em `assistant.Message`, vinculadas à `assistant.Conversation` do usuário
-  autenticado.
+  em `assistant.Message` (no Supabase), vinculadas à `assistant.Conversation`
+  do usuário autenticado.
 - **Autorização:** todo endpoint de conversa filtra sempre por
   `Conversation.objects.filter(id=..., user=request.user)` — nunca apenas
   pelo `id` recebido do JavaScript. Um usuário não consegue ler, responder
@@ -340,9 +366,10 @@ arquivo original, pois estava presente no repositório.
 
 ## Configuração das APIs externas
 
-O projeto tem duas integrações externas, ambas via SDK oficial e ambas
-opcionais no sentido de que **o restante do site funciona normalmente sem
-elas** — só a funcionalidade específica de cada uma fica indisponível.
+O projeto tem duas integrações externas opcionais no sentido de que **o
+restante do site funciona normalmente sem elas** — só a funcionalidade
+específica de cada uma fica indisponível — além da conexão obrigatória com
+o Supabase, que é o banco de dados do projeto.
 
 ### `GEMINI_API_KEY` / `GEMINI_MODEL` — necessárias para a IA
 
@@ -385,126 +412,132 @@ BREVO_SENDER_NAME=Desenvolvimento Back-end — UNIPÊ
   trata esse erro corretamente, sem enviar o e-mail nem mentir sucesso).
 - `BREVO_SENDER_NAME` é apenas o nome de exibição do remetente.
 
-## Deploy no PythonAnywhere
+### `DATABASE_URL` — obrigatória (banco de dados)
 
-Passo a passo para publicar este projeto em uma conta do
-[PythonAnywhere](https://www.pythonanywhere.com/).
+```env
+DATABASE_URL=postgresql://usuario:senha@host:porta/nome_do_banco
+```
 
-1. **Criar a conta** em pythonanywhere.com (o plano gratuito já é
-   suficiente para rodar o projeto; contas gratuitas têm uma allowlist de
-   acesso externo — se `GEMINI_API_KEY`/`BREVO_API_KEY` não funcionarem em
-   um plano gratuito, verifique se `generativelanguage.googleapis.com` e `api.brevo.com`
-   precisam ser liberados nessa allowlist, ou considere um plano pago, que
-   tem acesso externo irrestrito).
+- Diferente das integrações acima, esta **não é opcional**: sem uma
+  `DATABASE_URL` válida apontando para um projeto **Supabase**, a
+  aplicação não sobe, pois este projeto não usa SQLite nem qualquer outro
+  banco local.
+- Crie um projeto gratuito em <https://supabase.com> e copie a connection
+  string em **Project Settings → Database**.
 
-2. **Enviar o código** — pela aba **Files**, faça upload do `.zip` deste
-   projeto e extraia-o (ou clone via `git clone` em um **Bash console**, se
-   o projeto estiver em um repositório Git), preferencialmente em
-   `/home/SEU_USUARIO/academy-ascii-django`.
+## Deploy na Vercel
 
-3. **Criar um virtualenv** em um **Bash console**:
-   ```bash
-   cd ~/academy-ascii-django
-   python3.12 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
+A aplicação está publicada na Vercel e pode ser acessada em:
+**https://backend-dp-umber.vercel.app/**
+
+Como a Vercel executa o Django como **funções serverless**, sem sistema de
+arquivos persistente entre invocações, o banco de dados é o **Supabase**
+(PostgreSQL gerenciado) tanto em desenvolvimento quanto em produção — não
+há `db.sqlite3` neste projeto.
+
+Passo a passo para publicar (ou reproduzir) este deploy:
+
+1. **Criar um projeto no Supabase** — em <https://supabase.com>, crie um
+   projeto novo e copie a connection string do banco (aba **Project
+   Settings → Database**), no formato
+   `postgresql://usuario:senha@host:porta/nome_do_banco`. Esse valor será
+   usado como `DATABASE_URL`.
+
+2. **Criar a conta na Vercel** — em <https://vercel.com>, crie uma conta
+   (o plano gratuito Hobby é suficiente) e conecte-a ao repositório Git do
+   projeto (GitHub/GitLab/Bitbucket).
+
+3. **Importar o projeto** — no dashboard da Vercel, clique em **Add New →
+   Project** e selecione o repositório `academy-ascii-django`. A Vercel
+   detecta automaticamente que é um projeto Python.
+
+4. **Garantir um `vercel.json`** na raiz do projeto, apontando as
+   requisições para o WSGI do Django, por exemplo:
+   ```json
+   {
+     "builds": [
+       { "src": "config/wsgi.py", "use": "@vercel/python" }
+     ],
+     "routes": [
+       { "src": "/static/(.*)", "dest": "/static/$1" },
+       { "src": "/(.*)", "dest": "config/wsgi.py" }
+     ]
+   }
    ```
-   (troque `python3.12` pela versão de Python disponível na sua conta, se
-   necessário).
+   (ajuste os caminhos conforme a versão do builder Python em uso; o
+   importante é que toda requisição chegue à `application` exportada por
+   `config/wsgi.py`).
 
-4. **Criar a Web App** — aba **Web** → **Add a new web app** → escolha
-   **Manual configuration** (não escolha o wizard automático de Django) →
-   selecione a mesma versão de Python do virtualenv criado.
+5. **Servir os arquivos estáticos** — como a Vercel não mantém um
+   `staticfiles/` persistente entre deploys da mesma forma que um servidor
+   tradicional, o projeto usa **WhiteNoise** (`pip install whitenoise`,
+   middleware adicionado em `config/settings.py`) para servir CSS/JS/
+   imagens diretamente pela própria aplicação Django.
 
-5. **Configurar o virtualenv da Web App** — na seção **Virtualenv** da aba
-   **Web**, informe o caminho completo, ex.:
-   `/home/SEU_USUARIO/academy-ascii-django/venv`.
-
-6. **Criar o `.env` de produção** — pela aba **Files**, crie
-   `/home/SEU_USUARIO/academy-ascii-django/.env` a partir do
-   `.env.example`, preenchendo com valores reais:
+6. **Configurar as variáveis de ambiente** — na aba **Settings →
+   Environment Variables** do projeto na Vercel, cadastre:
    ```env
    SECRET_KEY=gere-uma-chave-aleatoria-longa-e-secreta
    DEBUG=False
-   ALLOWED_HOSTS=SEU_USUARIO.pythonanywhere.com
-   CSRF_TRUSTED_ORIGINS=https://SEU_USUARIO.pythonanywhere.com
-   SECURE_SSL_REDIRECT=False
+   ALLOWED_HOSTS=backend-dp-umber.vercel.app
+   CSRF_TRUSTED_ORIGINS=https://backend-dp-umber.vercel.app
+   DATABASE_URL=postgresql://usuario:senha@host:porta/nome_do_banco
    GEMINI_API_KEY=sua-chave-real-do-gemini
    GEMINI_MODEL=gemini-3.6-flash
    BREVO_API_KEY=sua-chave-real-da-brevo
    BREVO_SENDER_EMAIL=remetente-verificado@seudominio.com
    BREVO_SENDER_NAME=Desenvolvimento Back-end — UNIPÊ
    ```
-   (gere uma `SECRET_KEY` forte com, por exemplo,
-   `python -c "import secrets; print(secrets.token_urlsafe(50))"`).
 
-7. **Rodar as migrations** no mesmo Bash console (com o virtualenv ativo):
+7. **Rodar as migrations no Supabase** — como a Vercel não oferece um
+   console interativo persistente, rode as migrations localmente (ou em um
+   pipeline de CI), apontando `DATABASE_URL` para o mesmo projeto Supabase
+   usado em produção:
    ```bash
+   export DATABASE_URL="postgresql://usuario:senha@host:porta/nome_do_banco"
    python manage.py migrate
    ```
 
-8. **Rodar o `collectstatic`**:
+8. **Fazer o deploy** — qualquer `git push` para a branch conectada
+   (normalmente `main`) dispara automaticamente um novo build e deploy na
+   Vercel; o progresso pode ser acompanhado na aba **Deployments**.
+
+9. **(Opcional) Criar um superusuário** — como não há shell persistente em
+   produção, crie o superusuário localmente (ou via um management command
+   executado uma única vez), com `DATABASE_URL` apontando para o Supabase
+   de produção:
    ```bash
-   python manage.py collectstatic --noinput
+   python manage.py createsuperuser
    ```
-   Isso reúne todo o CSS/JS/imagens em `staticfiles/`.
 
-9. **Configurar o WSGI** — aba **Web** → link do arquivo WSGI (algo como
-   `/var/www/seuusuario_pythonanywhere_com_wsgi.py`) → apague o conteúdo de
-   exemplo e substitua por:
-   ```python
-   import os
-   import sys
-
-   path = "/home/SEU_USUARIO/academy-ascii-django"
-   if path not in sys.path:
-       sys.path.insert(0, path)
-
-   os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
-   from config.wsgi import application
-   ```
-   (o projeto já inclui um `config/wsgi.py` padrão do Django — não é
-   necessário criar nem modificar esse arquivo, apenas apontar para ele).
-
-10. **Configurar arquivos estáticos** — na seção **Static files** da aba
-    **Web**, adicione um mapeamento:
-    - **URL:** `/static/`
-    - **Directory:** `/home/SEU_USUARIO/academy-ascii-django/staticfiles`
-
-11. **(Opcional) Criar um superusuário** para acessar `/admin/`:
-    ```bash
-    python manage.py createsuperuser
-    ```
-
-12. **Recarregar a Web App** — botão verde **Reload** no topo da aba
-    **Web**.
-
-13. **Verificar o domínio** — acesse
-    `https://SEU_USUARIO.pythonanywhere.com/` e confirme que a tela de
+10. **Verificar o domínio** — acesse
+    **https://backend-dp-umber.vercel.app/** e confirme que a tela de
     login aparece corretamente, com CSS e imagens carregando.
 
-14. **Verificar os logs** em caso de erro — aba **Web** → **Log files**
-    (`Error log` mostra exceções do Django/WSGI; `Server log` mostra
-    problemas de nível mais baixo do servidor).
+11. **Verificar os logs em caso de erro** — na aba **Deployments** do
+    projeto na Vercel, abra o deploy específico e consulte **Functions /
+    Logs** para ver exceções do Django e falhas de build.
 
-15. **Testar os fluxos completos** já em produção: cadastro, login,
+12. **Testar os fluxos completos** já em produção: cadastro, login,
     páginas protegidas, chat de IA (com `GEMINI_API_KEY` real) e
     recuperação de senha (com `BREVO_API_KEY` real e um remetente
-    validado) — só nesse ambiente é possível validar de fato as chamadas
-    ao Gemini e à Brevo, já que muitos ambientes de desenvolvimento/sandbox
-    bloqueiam acesso direto a `generativelanguage.googleapis.com`/`api.brevo.com`.
+    validado).
 
 **Notas importantes:**
-- Nunca defina `DEBUG=True` na Web App de produção.
-- `ALLOWED_HOSTS` e `CSRF_TRUSTED_ORIGINS` já são lidos do `.env`
-  (`config/settings.py`) — não é necessário editar código Python para
-  apontar para o domínio do PythonAnywhere, apenas o `.env`.
-- O banco continua sendo SQLite (`db.sqlite3`, criado junto ao projeto na
-  primeira `migrate`) — nenhum PostgreSQL/MySQL é necessário.
-- Sempre que atualizar o código (novo upload/`git pull`), rode novamente
-  `migrate` e `collectstatic` se houver mudanças de modelo ou de estáticos,
-  e clique em **Reload** na aba **Web**.
+- Nunca defina `DEBUG=True` no ambiente de produção da Vercel.
+- `ALLOWED_HOSTS` e `CSRF_TRUSTED_ORIGINS` já são lidos das variáveis de
+  ambiente (`config/settings.py`) — não é necessário editar código Python
+  para apontar para o domínio da Vercel, apenas as variáveis de ambiente
+  do projeto.
+- O banco é o **Supabase** (PostgreSQL) tanto em desenvolvimento quanto em
+  produção — não há arquivo `db.sqlite3` neste projeto.
+- Como as funções da Vercel são efêmeras (sem disco persistente entre
+  invocações), migrations e criação de superusuário são feitas
+  localmente/via CI, sempre apontando para o mesmo Supabase usado em
+  produção.
+- Sempre que atualizar o código, um novo `git push` já dispara um novo
+  deploy automaticamente na Vercel — não há um botão "Reload" manual como
+  em outros provedores.
 
 ## Estrutura de diretórios
 
@@ -512,6 +545,7 @@ Passo a passo para publicar este projeto em uma conta do
 academy-ascii-django/
 ├── manage.py
 ├── requirements.txt
+├── vercel.json                # configuração de build/rotas da Vercel
 ├── .env.example
 ├── .gitignore
 ├── README.md
@@ -568,9 +602,18 @@ adaptados, sempre preservando o resultado final para o usuário:
 - **Frontend:** React/TanStack Start → Django Templates + JavaScript puro.
   As mesmas classes utilitárias (Tailwind) foram reaproveitadas via CDN,
   configurado para usar os mesmos tokens de cor/raio do CSS original.
-- **Autenticação/banco:** Supabase (Postgres + Auth) → modelo de usuário
-  customizado do Django + SQLite. O comportamento (login por e-mail, hash
-  de senha, sessão) é equivalente.
+- **Autenticação:** Supabase Auth (projeto original) → autenticação nativa
+  do Django, com modelo de usuário customizado (login por e-mail, hash de
+  senha PBKDF2, sessão). O comportamento é equivalente.
+- **Banco de dados:** continua sendo o **Supabase** em ambas as versões —
+  porém, no projeto original, o Supabase era consumido via SDK (Auth +
+  Postgres); nesta versão Django, o Supabase é usado apenas como Postgres
+  gerenciado, acessado diretamente via `DATABASE_URL`, sem uso do SDK/Auth
+  da Supabase.
+- **Hospedagem:** ambiente do Lovable → **Vercel** (deploy automático via
+  Git, Django rodando como funções serverless), mantendo o mesmo Supabase
+  como banco de dados. Aplicação publicada em
+  <https://backend-dp-umber.vercel.app/>.
 - **IA:** gateway de IA da Lovable (Gemini) → SDK oficial do Google Gemini
   (`from google import genai`, `genai.Client(...)`, modelo padrão
   `gemini-3.6-flash`), usado diretamente em vez de através de um gateway
@@ -586,9 +629,6 @@ adaptados, sempre preservando o resultado final para o usuário:
   e-mail via SDK oficial da Brevo (`import brevo`). Essa é a única
   divergência funcional (não apenas tecnológica) desta migração em
   relação ao comportamento original, e foi feita deliberadamente.
-- **Assets faltantes:** 5 imagens hospedadas fora do repositório original
-  foram substituídas por placeholders locais (ver seção
-  [Assets](#assets--imagens)) até que os arquivos reais sejam fornecidos.
 
 Nenhuma funcionalidade do projeto original foi removida, resumida ou
 substituída por uma versão simplificada, exceto a exibição do código de
